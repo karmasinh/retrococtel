@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "name": "Ron blanco",
+    "category": "Alcohol",
+    "unit_default": "ml",
+    "calories_per_unit": 65,
+    "abv": 40,
+    "effects": ["energizante", "relajante"],
+    "stock": 1500,
+    "reorder_threshold": 500
+  },
+  {
+    "id": 2,
+    "name": "Jugo de lima",
+    "category": "Jugo",
+    "unit_default": "ml",
+    "calories_per_unit": 4,
+    "abv": 0,
+    "effects": ["ácido", "refrescante"],
+    "stock": 2000,
+    "reorder_threshold": 500
+  },
+  {
+    "id": 3,
+    "name": "Azúcar moreno",
+    "category": "Endulzante",
+    "unit_default": "cucharadita",
+    "calories_per_unit": 16,
+    "abv": 0,
+    "effects": ["dulce"],
+    "stock": 500,
+    "reorder_threshold": 100
+  },
+  {
+    "id": 4,
+    "name": "Hierbabuena",
+    "category": "Hierba",
+    "unit_default": "hojas",
+    "calories_per_unit": 1,
+    "abv": 0,
+    "effects": ["aromático", "refrescante"],
+    "stock": 200,
+    "reorder_threshold": 50
+  },
+  {
+    "id": 5,
+    "name": "Soda",
+    "category": "Refresco",
+    "unit_default": "ml",
+    "calories_per_unit": 0,
+    "abv": 0,
+    "effects": ["refrescante"],
+    "stock": 3000,
+    "reorder_threshold": 1000
+  },
+  {
+    "id": 6,
+    "name": "Tequila",
+    "category": "Alcohol",
+    "unit_default": "ml",
+    "calories_per_unit": 64,
+    "abv": 38,
+    "effects": ["energizante", "festivo"],
+    "stock": 1200,
+    "reorder_threshold": 400
+  },
+  {
+    "id": 7,
+    "name": "Triple sec",
+    "category": "Licor",
+    "unit_default": "ml",
+    "calories_per_unit": 82,
+    "abv": 30,
+    "effects": ["dulce", "cítrico"],
+    "stock": 800,
+    "reorder_threshold": 300
+  },
+  {
+    "id": 8,
+    "name": "Jugo de limón",
+    "category": "Jugo",
+    "unit_default": "ml",
+    "calories_per_unit": 4,
+    "abv": 0,
+    "effects": ["ácido", "refrescante"],
+    "stock": 1800,
+    "reorder_threshold": 500
+  },
+  {
+    "id": 9,
+    "name": "Sal",
+    "category": "Condimento",
+    "unit_default": "pizca",
+    "calories_per_unit": 0,
+    "abv": 0,
+    "effects": ["salado"],
+    "stock": 1000,
+    "reorder_threshold": 200
+  },
+  {
+    "id": 10,
+    "name": "Hielo",
+    "category": "Básico",
+    "unit_default": "cubos",
+    "calories_per_unit": 0,
+    "abv": 0,
+    "effects": ["refrescante"],
+    "stock": null,
+    "reorder_threshold": null
+  }
+]

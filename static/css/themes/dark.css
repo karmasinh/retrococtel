@@ -1,0 +1,64 @@
+/* Tema Oscuro */
+:root {
+    --primary-color: #1e3a8a;
+    --secondary-color: #3b82f6;
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-color: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --info-color: #3b82f6;
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Sidebar */
+.css-1d391kg {
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+}
+
+/* Headers */
+.css-10trblm {
+    color: var(--text-color);
+}
+
+/* Botones */
+.stButton > button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.stButton > button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Inputs */
+.stTextInput > div > div > input,
+.stSelectbox > div > div > select,
+.stTextArea > div > div > textarea {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Cards */
+.css-12w0ah8 {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Métricas */
+.css-1offfwp {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}

@@ -1,0 +1,22 @@
+# Framework principal
+streamlit>=1.28.0
+
+# Base de datos
+mysql-connector-python>=8.1.0
+
+# Análisis y manipulación de datos
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualización
+plotly>=5.17.0
+
+# Configuración y utilidades
+python-dotenv>=1.0.0
+
+# Seguridad y hashing
+bcrypt>=4.0.0
+
+# Utilidades adicionales
+Pillow>=10.0.0
+requests>=2.31.0
