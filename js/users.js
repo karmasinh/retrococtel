@@ -39,64 +39,11 @@ class UserManager {
     }
 
     async loadRoles() {
-        try {
-            // En una implementación real, se obtendrían de la API
-            // this.roles = await window.apiClient.getRoles();
-            
-            // Usar datos de ejemplo por ahora
-            this.roles = [
-                { id: 1, name: "Administrador", permissions: ["all"] },
-                { id: 2, name: "Editor", permissions: ["read", "create", "update"] },
-                { id: 3, name: "Lector", permissions: ["read"] }
-            ];
-        } catch (error) {
-            console.error('Error loading roles:', error);
-            window.toastManager.show('Error al cargar los roles', 'error');
-        }
+        try { this.roles = await window.apiClient.getRoles(); }
+        catch (error) { console.error('Error loading roles:', error); window.toastManager.show('Error al cargar los roles', 'error'); }
     }
 
-    async loadUsers() {
-        try {
-            // En una implementación real, se obtendrían de la API
-            // const users = await window.apiClient.getUsers();
-            
-            // Usar datos de ejemplo por ahora
-            const users = [
-                {
-                    id: 1,
-                    full_name: "Ana García",
-                    username: "ana_admin",
-                    email: "ana@ejemplo.com",
-                    avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=A",
-                    role: "Administrador",
-                    status: "Activo"
-                },
-                {
-                    id: 2,
-                    full_name: "Carlos López",
-                    username: "carlos_editor",
-                    email: "carlos@ejemplo.com",
-                    avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=C",
-                    role: "Editor",
-                    status: "Activo"
-                },
-                {
-                    id: 3,
-                    full_name: "María Rodríguez",
-                    username: "maria_lector",
-                    email: "maria@ejemplo.com",
-                    avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=M",
-                    role: "Lector",
-                    status: "Inactivo"
-                }
-            ];
-            
-            this.displayUsers(users);
-        } catch (error) {
-            console.error('Error loading users:', error);
-            window.toastManager.show('Error al cargar los usuarios', 'error');
-        }
-    }
+    async loadUsers() { try { const users = await window.apiClient.getUsers(); this.users = users; this.displayUsers(users) } catch (error) { console.error('Error loading users:', error); window.toastManager.show('Error al cargar los usuarios', 'error') } }
 
     displayUsers(users) {
         const container = document.getElementById('usersContainer');
@@ -282,12 +229,11 @@ class UserManager {
             // Recopilar datos del formulario
             const formData = this.collectUserFormData();
             
-            // En una implementación real, se enviaría a la API
             if (this.currentUser) {
-                // await window.apiClient.updateUser(this.currentUser.id, formData);
+                await window.apiClient.updateUser(this.currentUser.id, formData);
                 window.toastManager.show('Usuario actualizado correctamente', 'success');
             } else {
-                // await window.apiClient.createUser(formData);
+                await window.apiClient.createUser(formData);
                 window.toastManager.show('Usuario creado correctamente', 'success');
             }
             
@@ -371,66 +317,7 @@ class UserManager {
         return formData;
     }
 
-    searchUsers() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const roleFilter = document.getElementById('roleFilter').value;
-        const statusFilter = document.getElementById('statusFilter').value;
-        
-        // En una implementación real, se enviarían estos filtros a la API
-        // Por ahora, filtramos localmente los usuarios de ejemplo
-        
-        const filteredUsers = [
-            {
-                id: 1,
-                full_name: "Ana García",
-                username: "ana_admin",
-                email: "ana@ejemplo.com",
-                avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=A",
-                role: "Administrador",
-                status: "Activo"
-            },
-            {
-                id: 2,
-                full_name: "Carlos López",
-                username: "carlos_editor",
-                email: "carlos@ejemplo.com",
-                avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=C",
-                role: "Editor",
-                status: "Activo"
-            },
-            {
-                id: 3,
-                full_name: "María Rodríguez",
-                username: "maria_lector",
-                email: "maria@ejemplo.com",
-                avatar_url: "https://via.placeholder.com/100/3D8FC2/FFFFFF?text=M",
-                role: "Lector",
-                status: "Inactivo"
-            }
-        ].filter(user => {
-            // Filtrar por término de búsqueda
-            if (searchTerm && 
-                !user.full_name.toLowerCase().includes(searchTerm) && 
-                !user.username.toLowerCase().includes(searchTerm) && 
-                !user.email.toLowerCase().includes(searchTerm)) {
-                return false;
-            }
-            
-            // Filtrar por rol
-            if (roleFilter && user.role !== roleFilter) {
-                return false;
-            }
-            
-            // Filtrar por estado
-            if (statusFilter && user.status !== statusFilter) {
-                return false;
-            }
-            
-            return true;
-        });
-        
-        this.displayUsers(filteredUsers);
-    }
+    async searchUsers() { const q = document.getElementById('searchInput').value || ''; const roleName = document.getElementById('roleFilter').value || ''; const status = document.getElementById('statusFilter').value || ''; let role_id = ''; if (roleName) { const r = this.roles.find(x=> x.name===roleName); role_id = r? r.id : '' } const users = await window.apiClient.getUsers({ q, role_id, status }); this.users = users; this.displayUsers(users) }
 }
 
 // Inicializar el manager de usuarios cuando se carga la página

@@ -136,16 +136,14 @@ class ToastManager {
     
     this.container.appendChild(toast);
     
-    const bsToast = new bootstrap.Toast(toast, {
-      delay: duration
-    });
-    
-    bsToast.show();
-    
-    // Eliminar el toast del DOM cuando se oculte
-    toast.addEventListener('hidden.bs.toast', () => {
-      toast.remove();
-    });
+    let bsToast = null;
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      bsToast = new bootstrap.Toast(toast, { delay: duration });
+      bsToast.show();
+      toast.addEventListener('hidden.bs.toast', () => { toast.remove(); });
+    } else {
+      setTimeout(() => { toast.remove(); }, duration);
+    }
     
     return toast;
   }
@@ -230,18 +228,34 @@ class APIClient {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/ingredients${queryString ? `?${queryString}` : ''}`);
   }
+  async searchIngredients(query, limit = 20) {
+    const qs = new URLSearchParams({ search: query, limit }).toString();
+    return this.request(`/ingredients?${qs}`);
+  }
+  async getStatsTopIngredients() { return this.request('/stats/top-ingredients'); }
+  async getStatsTopCocktails() { return this.request('/stats/top-cocktails'); }
+  async getStatsUserPreferences() { return this.request('/stats/user-preferences'); }
+  async getStatsCocktailsPerDay() { return this.request('/stats/cocktails-per-day'); }
+  async getStatsIngredientUsage() { return this.request('/stats/ingredient-usage'); }
+  async getTags() { return this.request('/stats/tags'); }
+  async getStatsTopBases() { return this.request('/stats/top-bases'); }
+  async getStatsUsersCount() { return this.request('/stats/users-count'); }
   
   // Métodos para Usuarios
   async getUsers(params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/users${queryString ? `?${queryString}` : ''}`);
   }
+  async createUser(data){ return this.request('/users', { method:'POST', body: JSON.stringify(data) }) }
+  async updateUser(id, data){ return this.request(`/users/${id}`, { method:'PUT', body: JSON.stringify(data) }) }
   
   // Métodos para Roles
   async getRoles(params = {}) {
     const queryString = new URLSearchParams(params).toString();
     return this.request(`/roles${queryString ? `?${queryString}` : ''}`);
   }
+  async createRole(data){ return this.request('/roles', { method:'POST', body: JSON.stringify(data) }) }
+  async updateRole(id, data){ return this.request(`/roles/${id}`, { method:'PUT', body: JSON.stringify(data) }) }
 }
 
 // Inicialización de la aplicación
@@ -251,15 +265,17 @@ document.addEventListener('DOMContentLoaded', function() {
   window.navigationManager = new NavigationManager();
   window.toastManager = new ToastManager();
   
-  // Configurar API Client (cambiar la URL base según el entorno)
-  const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000/api';
+  // Configurar API Client (base según origen actual)
+  const API_BASE_URL = `${window.location.origin}/api`;
   window.apiClient = new APIClient(API_BASE_URL);
   
   // Inicializar tooltips de Bootstrap
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
+  if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
   
   // Manejar formularios de login
   const loginForm = document.getElementById('loginForm');
@@ -352,9 +368,8 @@ async function deleteItem(type, id) {
         throw new Error('Tipo de elemento no válido');
     }
     
-    // await window.apiClient.request(endpoint, { method: 'DELETE' });
+    await window.apiClient.request(endpoint, { method: 'DELETE' });
     
-    // Simular eliminación exitosa
     window.toastManager.show('Elemento eliminado correctamente', 'success');
     
     // Recargar la página después de un breve delay
@@ -365,3 +380,27 @@ async function deleteItem(type, id) {
     window.toastManager.show('Error al eliminar: ' + error.message, 'error');
   }
 }
+
+function decodeTokenRole() {
+  const t = localStorage.getItem('authToken');
+  if (!t) return null;
+  const p = t.split('.')[1];
+  try {
+    const json = JSON.parse(atob(p.replace(/-/g, '+').replace(/_/g, '/')));
+    return json.role_id || json.role || null;
+  } catch { return null; }
+}
+
+function applyRoleMenuVisibility() {
+  const roleId = decodeTokenRole();
+  const isAdmin = roleId === 1;
+  const isPriv = roleId === 2 || roleId === 3 || isAdmin;
+  const elCreate = document.querySelectorAll('[data-role="create-cocktail"]');
+  const elRoles = document.querySelectorAll('[data-role="manage-roles"]');
+  const elDashboard = document.querySelectorAll('[data-role="dashboard"]');
+  elCreate.forEach(e=>e.style.display = isPriv ? '' : 'none');
+  elRoles.forEach(e=>e.style.display = isAdmin ? '' : 'none');
+  elDashboard.forEach(e=>e.style.display = isPriv ? '' : 'none');
+}
+
+document.addEventListener('DOMContentLoaded', applyRoleMenuVisibility);

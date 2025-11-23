@@ -307,6 +307,29 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   align-items: flex-end;
+}
+
+/* Login estilos adicionales adaptados del diseño base */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  padding: 20px;
+}
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--neutral-50);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+.login-header { background-color: var(--primary-blue); color: #fff; text-align: center; padding: var(--spacing-xl) }
+.login-body { padding: var(--spacing-xl) }
+.brand-logo { font-family: var(--font-heading); font-size: 2rem; font-weight: 700; margin-bottom: 0 }
+.brand-tagline { font-size: 0.875rem; opacity: 0.8; margin-bottom: 0 }
   
   .ingredient-field {
     flex: 1;
@@ -323,7 +346,7 @@ h1, h2, h3, h4, h5, h6 {
   .remove-btn {
     margin-bottom: 0.5rem;
   }
-}
+
 
 
 .modal-content {

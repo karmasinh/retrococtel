@@ -1,0 +1,11 @@
+async function init(){ const token=localStorage.getItem('authToken'); if(!token){ window.location.href='../pages/login.html'; return } const topIng=await window.apiClient.getStatsTopIngredients().catch(()=>[]); const topCock=await window.apiClient.getStatsTopCocktails().catch(()=>[]); const prefs=await window.apiClient.getStatsUserPreferences().catch(()=>({})); const perDay=await window.apiClient.getStatsCocktailsPerDay().catch(()=>[]); const usersCount=await window.apiClient.request('/stats/users-count').catch(()=>({count:0})); const topBases=await window.apiClient.request('/stats/top-bases').catch(()=>[]); const cocktails=await window.apiClient.getCocktails().catch(()=>[]);
+  document.getElementById('metric-cocktails').textContent=String(cocktails.length||0);
+  document.getElementById('metric-users').textContent=String(usersCount.count||0);
+  document.getElementById('metric-top-ingredient').textContent=topIng[0]? (topIng[0].Ingredient? topIng[0].Ingredient.name : topIng[0].name || '') : '';
+  document.getElementById('metric-top-base').textContent=topBases[0]? (topBases[0].base||'') : '';
+  const ctx1=document.getElementById('chart-ingredients'); new Chart(ctx1,{type:'bar',data:{labels:topIng.map(r=> r.Ingredient? r.Ingredient.name : r.name),datasets:[{label:'Uso',data:topIng.map(r=> parseInt(r.get?r.get('count'):r.count||0,10)||0),backgroundColor:'#4e79a7'}]}});
+  const prefLabels=Object.keys(prefs); const prefValues=Object.values(prefs); const ctx2=document.getElementById('chart-preferences'); new Chart(ctx2,{type:'doughnut',data:{labels:prefLabels,datasets:[{data:prefValues,backgroundColor:['#f28e2b','#e15759','#76b7b2','#59a14f','#edc949','#af7aa1','#ff9da7','#9c755f']}]}});
+  const ctx3=document.getElementById('chart-per-day'); new Chart(ctx3,{type:'line',data:{labels:perDay.map(r=> r.day|| (r.get?r.get('day'):'') ),datasets:[{label:'Cócteles',data:perDay.map(r=> parseInt(r.get?r.get('count'):r.count||0,10)||0),borderColor:'#e15759'}]}});
+  const ctx4=document.getElementById('chart-radar'); new Chart(ctx4,{type:'radar',data:{labels:prefLabels,datasets:[{label:'Preferencias',data:prefValues,backgroundColor:'rgba(118,183,178,0.3)',borderColor:'#76b7b2'}]}}) }
+
+document.addEventListener('DOMContentLoaded', init)

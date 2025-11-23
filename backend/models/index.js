@@ -34,6 +34,8 @@ db.Cocktail.hasMany(db.CocktailBase, { foreignKey: 'cocktail_id' })
 db.Cocktail.hasMany(db.CocktailAromatic, { foreignKey: 'cocktail_id' })
 db.Cocktail.hasMany(db.CocktailGarnish, { foreignKey: 'cocktail_id' })
 db.Cocktail.hasMany(db.CocktailEffect, { foreignKey: 'cocktail_id' })
+db.Cocktail.hasMany(db.UserFavorite, { foreignKey: 'cocktail_id' })
+db.Cocktail.hasMany(db.UserHistory, { foreignKey: 'cocktail_id' })
 
 db.CocktailIngredient.belongsTo(db.Cocktail, { foreignKey: 'cocktail_id' })
 db.CocktailIngredient.belongsTo(db.Ingredient, { foreignKey: 'ingredient_id' })
