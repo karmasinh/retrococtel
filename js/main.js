@@ -166,6 +166,10 @@ class APIClient {
       },
       ...options
     };
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     
     if (config.body && typeof config.body === 'object') {
       config.body = JSON.stringify(config.body);
@@ -184,6 +188,11 @@ class APIClient {
       console.error('API Request Error:', error);
       throw error;
     }
+  }
+  async login(credentials) {
+    const res = await this.request('/auth/login', { method: 'POST', body: credentials })
+    if (res && res.token) localStorage.setItem('authToken', res.token)
+    return res
   }
   
   // Métodos para Cocktails
@@ -273,13 +282,7 @@ async function handleLogin(e) {
   };
   
   try {
-    // Aquí se conectaría con el endpoint de autenticación
-    // const response = await window.apiClient.request('/auth/login', {
-    //   method: 'POST',
-    //   body: credentials
-    // });
-    
-    // Simulación de login exitoso
+    await window.apiClient.login(credentials)
     window.toastManager.show('Inicio de sesión exitoso', 'success');
     setTimeout(() => {
       window.location.href = 'index.html';
