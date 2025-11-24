@@ -15,140 +15,71 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <nav id="sidebar" class="sidebar">
-        <div class="sidebar-header p-3 border-bottom">
-            <h1 class="h5 mb-0 text-center">Mixology Manager</h1>
-        </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="index.html" class="nav-link">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="cocktails.html" class="nav-link">
-                    <i class="fas fa-glass-martini-alt"></i>
-                    Cócteles
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="inventario.html" class="nav-link active">
-                    <i class="fas fa-warehouse"></i>
-                    Inventario
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="usuarios.html" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    Usuarios
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="roles.html" class="nav-link">
-                    <i class="fas fa-user-shield"></i>
-                    Roles
-                </a>
-            </li>
-            <li class="nav-item mt-3">
-                <a href="login.html" class="nav-link" data-action="logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Cerrar Sesión
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-            <div class="container-fluid">
-                <button id="sidebarToggle" class="btn btn-sm btn-outline-secondary me-2">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <span class="navbar-brand mb-0 h1">Gestión de Inventario</span>
-                
-                <div class="d-flex align-items-center ms-auto">
-                    <button id="themeToggle" class="btn btn-sm btn-outline-secondary me-2">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i>
-                            Admin User
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="login.html" data-action="logout"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"><i class="fas fa-cocktail"></i></div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                    <li><a href="cocktails.html"><i class="fas fa-glass-martini-alt"></i><span>Cócteles</span></a></li>
+                    <li class="active"><a href="inventario.html"><i class="fas fa-carrot"></i><span>Inventario</span></a></li>
+                    <li data-role="manage-users"><a href="usuarios.html"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+                    <li data-role="manage-roles"><a href="roles.html"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>
+                    <li><a href="../frontend/ingredients-search.html"><i class="fas fa-search"></i><span>Ingredientes</span></a></li>
+                    <li><a href="explore.html"><i class="fas fa-compass"></i><span>Explorar</span></a></li>
+                    <li><a href="login.html" data-action="logout"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a></li>
+                </ul>
+            </nav>
+            <div class="profile">
+                <div class="avatar"><img src="https://via.placeholder.com/100/3D8FC2/FFFFFF?text=U" alt="Profile"></div>
+                <div class="user-info"><h3>Usuario</h3><p>Conectado</p></div>
             </div>
-        </nav>
-
-        <!-- Page Content -->
-        <div class="container-fluid">
-            <!-- Header with Actions -->
+        </aside>
+        <main class="content">
+            <header>
+                <h1>Gestión de Inventario</h1>
+                <p>Administra el stock de ingredientes</p>
+            </header>
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="h4 mb-0">Inventario de Ingredientes</h2>
                     <p class="text-muted mb-0">Gestiona el stock de ingredientes para cócteles</p>
                 </div>
                 <div>
-                    <button id="addIngredientBtn" class="btn btn-primary me-2">
-                        <i class="fas fa-plus me-2"></i> Nuevo Ingrediente
-                    </button>
-                    <button id="loadSeedDataBtn" class="btn btn-outline-secondary">
-                        <i class="fas fa-database me-2"></i> Cargar Datos de Ejemplo
-                    </button>
+                    <button id="addIngredientBtn" class="btn btn-primary me-2"><i class="fas fa-plus me-2"></i> Nuevo Ingrediente</button>
+                    <button id="loadSeedDataBtn" class="btn btn-outline-secondary"><i class="fas fa-database me-2"></i> Cargar Datos de Ejemplo</button>
                 </div>
             </div>
-
-            <!-- Metrics Row -->
             <div class="row mb-4">
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card card-metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-carrot"></i>
-                        </div>
+                        <div class="metric-icon"><i class="fas fa-carrot"></i></div>
                         <h3 class="metric-value" id="totalIngredients">0</h3>
                         <p class="metric-label">Ingredientes Totales</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card card-metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
+                        <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <h3 class="metric-value" id="lowStockIngredients">0</h3>
                         <p class="metric-label">Stock Bajo</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card card-metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-box-open"></i>
-                        </div>
+                        <div class="metric-icon"><i class="fas fa-box-open"></i></div>
                         <h3 class="metric-value" id="outOfStockIngredients">0</h3>
                         <p class="metric-label">Sin Stock</p>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 mb-3">
                     <div class="card card-metric">
-                        <div class="metric-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
+                        <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
                         <h3 class="metric-value" id="goodStockIngredients">0</h3>
                         <p class="metric-label">Stock Bueno</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Search and Filters -->
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
@@ -156,9 +87,7 @@
                             <form id="searchForm">
                                 <div class="input-group">
                                     <input type="text" id="searchInput" class="form-control" placeholder="Buscar ingredientes...">
-                                    <button class="btn btn-outline-secondary" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                                    <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -197,8 +126,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Ingredients Table -->
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -214,22 +141,18 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Los ingredientes se cargarán dinámicamente aquí -->
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="text-muted" id="tableInfo">Mostrando 0 ingredientes</div>
                         <nav aria-label="Page navigation">
-                            <ul class="pagination" id="pagination">
-                                <!-- La paginación se generará dinámicamente -->
-                            </ul>
+                            <ul class="pagination" id="pagination"></ul>
                         </nav>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Bootstrap & Popper JS -->

@@ -8,6 +8,7 @@ class CocktailManager {
     }
 
     init() {
+        this.loadMeta();
         this.loadIngredients();
         this.loadCocktails();
         this.setupEventListeners();
@@ -53,99 +54,35 @@ class CocktailManager {
     }
 
     async loadIngredients() {
+        try { this.ingredients = await window.apiClient.getIngredients({ limit: 500 }); }
+        catch (error) { console.error('Error loading ingredients:', error); window.toastManager.show('Error al cargar los ingredientes', 'error'); this.ingredients = [] }
+    }
+
+    async loadMeta(){
         try {
-            // Primero intentar cargar desde localStorage
-            const savedIngredients = localStorage.getItem('cocktailIngredients');
-            
-            if (savedIngredients) {
-                this.ingredients = JSON.parse(savedIngredients);
-                return;
+            const meta = await window.apiClient.request('/cocktails/meta')
+            const catSel = document.getElementById('categoryFilter')
+            const baseSel = document.getElementById('baseFilter')
+            if (catSel && Array.isArray(meta.categories)) {
+                const existing = new Set(Array.from(catSel.options).map(o=>o.value))
+                meta.categories.forEach(v=>{ if(!existing.has(v)){ const o=document.createElement('option'); o.value=v; o.textContent=v; catSel.appendChild(o) } })
             }
-            
-            // Si no hay en localStorage, cargar desde el archivo JSON
-            const response = await fetch('../data/seed_ingredients.json');
-            if (!response.ok) {
-                throw new Error('No se pudo cargar el archivo de ingredientes');
+            if (baseSel && Array.isArray(meta.bases)) {
+                const existing = new Set(Array.from(baseSel.options).map(o=>o.value))
+                meta.bases.forEach(v=>{ if(!existing.has(v)){ const o=document.createElement('option'); o.value=v; o.textContent=v; baseSel.appendChild(o) } })
             }
-            
-            this.ingredients = await response.json();
-            
-            // Guardar en localStorage para uso futuro
-            localStorage.setItem('cocktailIngredients', JSON.stringify(this.ingredients));
-            
-        } catch (error) {
-            console.error('Error loading ingredients:', error);
-            window.toastManager.show('Error al cargar los ingredientes', 'error');
-            
-            // Datos de respaldo en caso de error
-            this.ingredients = [
-                { id: 1, name: "Ron blanco", category: "Alcohol", unit_default: "ml", calories_per_unit: 65, abv: 40 },
-                { id: 2, name: "Jugo de lima", category: "Jugo", unit_default: "ml", calories_per_unit: 4, abv: 0 },
-                { id: 3, name: "Azúcar moreno", category: "Endulzante", unit_default: "cucharadita", calories_per_unit: 16, abv: 0 },
-                { id: 4, name: "Hierbabuena", category: "Hierba", unit_default: "hojas", calories_per_unit: 1, abv: 0 },
-                { id: 5, name: "Soda", category: "Refresco", unit_default: "ml", calories_per_unit: 0, abv: 0 }
-            ];
-        }
+            const fill = (id, arr)=>{ const el=document.getElementById(id); if(el && Array.isArray(arr)){ el.innerHTML=''; arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; el.appendChild(o) }) } }
+            fill('categories', meta.categories)
+            fill('bases', meta.bases)
+            fill('effects', meta.effects)
+            fill('tags', meta.tags)
+            fill('aromatics', meta.aromatics)
+        } catch (e) {}
     }
 
     async loadCocktails() {
-        try {
-            // Primero intentar cargar desde localStorage
-            const savedCocktails = localStorage.getItem('cocktailRecipes');
-            
-            if (savedCocktails) {
-                this.cocktails = JSON.parse(savedCocktails);
-                this.displayCocktails(this.cocktails);
-                return;
-            }
-            
-            // Si no hay en localStorage, cargar desde el archivo JSON
-            const response = await fetch('../data/seed_cocktails.json');
-            if (!response.ok) {
-                throw new Error('No se pudo cargar el archivo de cócteles');
-            }
-            
-            this.cocktails = await response.json();
-            
-            // Guardar en localStorage para uso futuro
-            localStorage.setItem('cocktailRecipes', JSON.stringify(this.cocktails));
-            
-            this.displayCocktails(this.cocktails);
-            
-        } catch (error) {
-            console.error('Error loading cocktails:', error);
-            window.toastManager.show('Error al cargar los cócteles', 'error');
-            
-            // Datos de respaldo en caso de error
-            const backupCocktails = [
-                {
-                    id: 1,
-                    name: "Mojito Clásico",
-                    short_description: "Refrescante cóctel cubano con hierbabuena y lima",
-                    image_urls: ["https://via.placeholder.com/300x200/3D8FC2/FFFFFF?text=Mojito"],
-                    categories: ["Refrescante", "Tropical"],
-                    bases: ["Ron blanco"],
-                    prep_time_minutes: 5,
-                    difficulty: "Fácil",
-                    calories: 180,
-                    is_published: true
-                },
-                {
-                    id: 2,
-                    name: "Margarita",
-                    short_description: "Cóctel de tequila con triple sec y lima",
-                    image_urls: ["https://via.placeholder.com/300x200/3D8FC2/FFFFFF?text=Margarita"],
-                    categories: ["Clásico", "Ácido"],
-                    bases: ["Tequila"],
-                    prep_time_minutes: 7,
-                    difficulty: "Moderado",
-                    calories: 200,
-                    is_published: true
-                }
-            ];
-            
-            this.displayCocktails(backupCocktails);
-        }
+        try { this.cocktails = await window.apiClient.getCocktails(); this.displayCocktails(this.cocktails) }
+        catch (error) { console.error('Error loading cocktails:', error); window.toastManager.show('Error al cargar los cócteles', 'error'); this.displayCocktails([]) }
     }
 
     displayCocktails(cocktails) {
@@ -253,8 +190,8 @@ class CocktailManager {
         
         // Mostrar el modal
         const modalElement = document.getElementById('cocktailModal');
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { const modal = new bootstrap.Modal(modalElement); modal.show() }
+        else { modalElement.style.display='block' }
     }
 
     createCocktailModal() {
@@ -818,31 +755,10 @@ class CocktailManager {
             // Recopilar datos del formulario
             const formData = this.collectFormData();
             
-            if (this.currentCocktail) {
-                // Actualizar cóctel existente
-                const index = this.cocktails.findIndex(c => c.id == this.currentCocktail.id);
-                if (index !== -1) {
-                    this.cocktails[index] = { ...this.cocktails[index], ...formData };
-                }
-            } else {
-                // Crear nuevo cóctel
-                const newId = Math.max(...this.cocktails.map(c => c.id), 0) + 1;
-                formData.id = newId;
-                formData.created_by = 1; // ID del usuario actual
-                formData.timestamps = {
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                };
-                this.cocktails.push(formData);
-            }
-            
-            // Guardar en localStorage
-            localStorage.setItem('cocktailRecipes', JSON.stringify(this.cocktails));
-            
-            // Cerrar modal y recargar la lista
+            if (this.currentCocktail) { await window.apiClient.updateCocktail(this.currentCocktail.id, formData) }
+            else { await window.apiClient.createCocktail(formData) }
             bootstrap.Modal.getInstance(document.getElementById('cocktailModal')).hide();
-            this.displayCocktails(this.cocktails);
-            
+            await this.loadCocktails();
             window.toastManager.show(`Cóctel ${this.currentCocktail ? 'actualizado' : 'creado'} correctamente`, 'success');
             
         } catch (error) {
@@ -945,53 +861,20 @@ class CocktailManager {
         return formData;
     }
 
-    searchCocktails() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const categoryFilter = document.getElementById('categoryFilter').value;
-        const baseFilter = document.getElementById('baseFilter').value;
-        const difficultyFilter = document.getElementById('difficultyFilter').value;
-        const statusFilter = document.getElementById('statusFilter').value;
-        
-        const filteredCocktails = this.cocktails.filter(cocktail => {
-            // Filtrar por término de búsqueda
-            if (searchTerm && !cocktail.name.toLowerCase().includes(searchTerm) && 
-                !cocktail.short_description.toLowerCase().includes(searchTerm)) {
-                return false;
-            }
-            
-            // Filtrar por categoría
-            if (categoryFilter && (!cocktail.categories || !cocktail.categories.includes(categoryFilter))) {
-                return false;
-            }
-            
-            // Filtrar por base alcohólica
-            if (baseFilter && (!cocktail.bases || !cocktail.bases.includes(baseFilter))) {
-                return false;
-            }
-            
-            // Filtrar por dificultad
-            if (difficultyFilter && cocktail.difficulty !== difficultyFilter) {
-                return false;
-            }
-            
-            // Filtrar por estado de publicación
-            if (statusFilter === 'published' && !cocktail.is_published) {
-                return false;
-            }
-            
-            if (statusFilter === 'draft' && cocktail.is_published) {
-                return false;
-            }
-            
-            return true;
-        });
-        
-        this.displayCocktails(filteredCocktails);
+    async searchCocktails() {
+        const searchTerm = document.getElementById('searchInput').value || ''
+        const categoryFilter = document.getElementById('categoryFilter').value || ''
+        const baseFilter = document.getElementById('baseFilter').value || ''
+        const statusFilter = document.getElementById('statusFilter').value || ''
+        const params = {}
+        if (searchTerm) params.q = searchTerm
+        if (categoryFilter) params.category = categoryFilter
+        if (baseFilter) params.base = baseFilter
+        if (statusFilter) params.is_published = statusFilter === 'published' ? 'true' : statusFilter === 'draft' ? 'false' : ''
+        try { const list = await window.apiClient.getCocktails(params); this.cocktails = list; this.displayCocktails(list) } catch (e) { window.toastManager.show('Error en la búsqueda', 'error') }
     }
 
-    applyFilters() {
-        this.searchCocktails();
-    }
+    applyFilters() { this.searchCocktails() }
 }
 
 // Inicializar el manager de cócteles cuando se carga la página

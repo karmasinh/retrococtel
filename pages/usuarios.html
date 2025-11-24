@@ -15,83 +15,31 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <nav id="sidebar" class="sidebar">
-        <div class="sidebar-header p-3 border-bottom">
-            <h1 class="h5 mb-0 text-center">Mixology Manager</h1>
-        </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="index.html" class="nav-link">
-                    <i class="fas fa-home"></i>
-                    Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="cocktails.html" class="nav-link">
-                    <i class="fas fa-glass-martini-alt"></i>
-                    Cócteles
-                </a>
-            </li>
-            <li class="nav-item">
-                 <a href="inventario.html" class="nav-link">
-                    <i class="fas fa-carrot"></i>
-                    Inventario
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="usuarios.html" class="nav-link active">
-                    <i class="fas fa-users"></i>
-                    Usuarios
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="roles.html" class="nav-link">
-                    <i class="fas fa-user-shield"></i>
-                    Roles
-                </a>
-            </li>
-            <li class="nav-item mt-3">
-                <a href="login.html" class="nav-link" data-action="logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Cerrar Sesión
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-            <div class="container-fluid">
-                <button id="sidebarToggle" class="btn btn-sm btn-outline-secondary me-2">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <span class="navbar-brand mb-0 h1">Gestión de Usuarios</span>
-                
-                <div class="d-flex align-items-center ms-auto">
-                    <button id="themeToggle" class="btn btn-sm btn-outline-secondary me-2">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i>
-                            Admin User
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="login.html" data-action="logout"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"><i class="fas fa-cocktail"></i></div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i><span>Dashboard</span></a></li>
+                    <li data-role="dashboard"><a href="cocktails.html"><i class="fas fa-glass-martini-alt"></i><span>Cócteles</span></a></li>
+                    <li><a href="inventario.html"><i class="fas fa-carrot"></i><span>Inventario</span></a></li>
+                    <li class="active"><a href="usuarios.html"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+                    <li data-role="manage-roles"><a href="roles.html"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>
+                    <li><a href="../frontend/ingredients-search.html"><i class="fas fa-search"></i><span>Ingredientes</span></a></li>
+                    <li><a href="explore.html"><i class="fas fa-compass"></i><span>Explorar</span></a></li>
+                    <li><a href="login.html" data-action="logout"><i class="fas fa-sign-out-alt"></i><span>Salir</span></a></li>
+                </ul>
+            </nav>
+            <div class="profile">
+                <div class="avatar"><img src="https://via.placeholder.com/100/3D8FC2/FFFFFF?text=U" alt="Profile"></div>
+                <div class="user-info"><h3>Usuario</h3><p>Conectado</p></div>
             </div>
-        </nav>
-
-        <!-- Page Content -->
-        <div class="container-fluid">
+        </aside>
+        <main class="content">
+            <header>
+                <h1>Gestión de Usuarios</h1>
+                <p>Administra los usuarios del sistema</p>
+            </header>
             <!-- Header with Actions -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
@@ -122,9 +70,6 @@
                                 <div class="col-sm-6">
                                     <select id="roleFilter" class="form-select filter-select">
                                         <option value="">Todos los roles</option>
-                                        <option value="Administrador">Administrador</option>
-                                        <option value="Editor">Editor</option>
-                                        <option value="Lector">Lector</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
@@ -140,11 +85,8 @@
                 </div>
             </div>
 
-            <!-- Users Grid -->
-            <div class="row" id="usersContainer">
-                <!-- Los usuarios se cargarán dinámicamente aquí -->
-            </div>
-        </div>
+            <div class="row" id="usersContainer"></div>
+        </main>
     </div>
 
     <!-- Bootstrap & Popper JS -->

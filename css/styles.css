@@ -101,6 +101,49 @@ body {
   transition: var(--transition-base);
 }
 
+/* Glassmorphism layout */
+.container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--spacing-lg);
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(26,75,140,0.15), rgba(212,175,55,0.1));
+}
+.sidebar {
+  position: sticky;
+  top: var(--spacing-lg);
+  height: calc(100vh - var(--spacing-lg)*2);
+  border-radius: var(--border-radius-xl);
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.6);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-lg);
+}
+.menu ul { list-style: none }
+.menu ul li { margin-bottom: var(--spacing-sm) }
+.menu ul li a {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: var(--neutral-700);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+}
+.menu ul li a:hover, .menu ul li.active a { background: rgba(26,75,140,0.1); color: var(--primary-blue) }
+.profile { display: flex; align-items: center; gap: var(--spacing-md); margin-top: auto }
+.profile .avatar img { border-radius: 50%; box-shadow: var(--shadow-md) }
+.content {
+  border-radius: var(--border-radius-xl);
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.7);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xl);
+}
+.card-container { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--spacing-lg) }
+.card { border: none; backdrop-filter: blur(6px); background: rgba(255,255,255,0.85) }
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 600;

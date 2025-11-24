@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prueba DB</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    input, button { padding: 5px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Prueba de Base de Datos</h1>
+
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Usuario o Email">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button onclick="login()">Login</button>
+  <p id="loginResult"></p>
+
+  <h2>Usuarios</h2>
+  <button onclick="loadUsers()">Cargar usuarios</button>
+  <table id="usersTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Password Hash</th>
+        <th>Role</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<script>
+const API_BASE = 'http://localhost:3000/api'; // Ajusta si tu puerto es distinto
+
+async function loadUsers() {
+  const res = await fetch(`${API_BASE}/users`);
+  if (!res.ok) { alert('Error cargando usuarios'); return; }
+  const users = await res.json();
+  const tbody = document.querySelector('#usersTable tbody');
+  tbody.innerHTML = '';
+  users.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${u.id}</td>
+      <td>${u.full_name}</td>
+      <td>${u.username}</td>
+      <td>${u.email}</td>
+      <td>${u.password_hash || '***'}</td>
+      <td>${u.role}</td>
+      <td>${u.status}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById('loginResult').textContent = 'Login OK, token: ' + data.token;
+    } else {
+      document.getElementById('loginResult').textContent = 'Error: ' + data.message;
+    }
+  } catch (e) {
+    document.getElementById('loginResult').textContent = 'Error en la conexión';
+  }
+}
+</script>
+</body>
+</html>

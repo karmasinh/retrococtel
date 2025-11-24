@@ -277,10 +277,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Manejar formularios de login
+  // Guardar referencia de si estamos en login
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', handleLogin);
+  }
+  else {
+    const t = localStorage.getItem('authToken')
+    if (!t) { window.location.href = 'login.html'; return }
   }
   
   // Configurar event listeners globales

@@ -39,8 +39,17 @@ class UserManager {
     }
 
     async loadRoles() {
-        try { this.roles = await window.apiClient.getRoles(); }
+        try { this.roles = await window.apiClient.getRoles(); this.populateRoleFilter() }
         catch (error) { console.error('Error loading roles:', error); window.toastManager.show('Error al cargar los roles', 'error'); }
+    }
+
+    populateRoleFilter(){
+        const sel = document.getElementById('roleFilter')
+        if(!sel) return
+        const current = sel.value
+        sel.innerHTML = '<option value="">Todos los roles</option>'
+        this.roles.forEach(r=>{ const o=document.createElement('option'); o.value=r.name; o.textContent=r.name; sel.appendChild(o) })
+        if(current) sel.value = current
     }
 
     async loadUsers() { try { const users = await window.apiClient.getUsers(); this.users = users; this.displayUsers(users) } catch (error) { console.error('Error loading users:', error); window.toastManager.show('Error al cargar los usuarios', 'error') } }
@@ -67,6 +76,8 @@ class UserManager {
             col.className = 'col-md-6 col-lg-4 mb-4';
             col.innerHTML = this.createUserCard(user);
             container.appendChild(col);
+            const editBtn = col.querySelector('[data-action="edit-user"]')
+            if (editBtn) editBtn.addEventListener('click', ()=> this.showUserModal(user))
         });
     }
 
@@ -115,8 +126,9 @@ class UserManager {
         }
         
         // Inicializar el modal de Bootstrap y mostrarlo
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-        modal.show();
+        const el = document.getElementById('userModal');
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) { const modal = new bootstrap.Modal(el); modal.show() }
+        else { el.style.display='block' }
     }
 
     createUserModal() {
